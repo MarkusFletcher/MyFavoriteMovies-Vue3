@@ -1,6 +1,7 @@
 <script setup>
 import { useMovieStore } from './stores/MovieStore'
-import MovieCard from './components/MovieCard.vue';
+import MovieCard from './components/MovieCard.vue'
+import VSearch from './components/Search.vue'
 
 const movieStore = useMovieStore()
 
@@ -16,8 +17,8 @@ const setTab = (value) => {
       <div class="header-title">My Favorite Movies</div>
     </header>
     <div class="tabs">
-      <button class="btn" :class="[{btn_green: movieStore.activeTab == 'movies'}]" @click="setTab('movies')">Favorite</button>
-      <button class="btn" :class="[{btn_green: movieStore.activeTab == 'search'}]" @click="setTab('search')">Search</button>
+      <button class="btn" :class="[{btn_blue: movieStore.activeTab == 'movies'}]" @click="setTab('movies')">Favorite</button>
+      <button class="btn" :class="[{btn_blue: movieStore.activeTab == 'search'}]" @click="setTab('search')">Search</button>
     </div>
     <div class="movies" v-if="movieStore.activeTab === 'movies'">
       <h2 class="heading-2" v-if="movieStore.getCountWatchedMovies">Watched Movies ({{ movieStore.getCountWatchedMovies }})</h2>
@@ -25,7 +26,9 @@ const setTab = (value) => {
       <h2 class="heading-2">All Movies ({{ movieStore.getCountTotalMovies }})</h2>
       <movie-card v-for="movie of movieStore.movies" :key="movie.id" :movie="movie"></movie-card>
     </div>
-    <div class="search" v-if="movieStore.activeTab === 'search'">Search</div>
+    <div class="search" v-if="movieStore.activeTab === 'search'">
+      <v-search></v-search>
+    </div>
   </main>
 </template>
 
@@ -58,7 +61,7 @@ const setTab = (value) => {
   &:hover {
     opacity: 0.7;
   }
-  &_green {
+  &_blue {
     background: #1eb4c3;
     color: #fff;
   }

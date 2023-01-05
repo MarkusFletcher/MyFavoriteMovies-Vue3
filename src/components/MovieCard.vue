@@ -1,13 +1,19 @@
 <script setup>
 import { useMovieStore } from '../stores/MovieStore'
+import { useSearchStore } from '../stores/SearchStore'
 
 const movieStore = useMovieStore()
+const searchStore = useSearchStore()
 
 const props = defineProps({
   movie: {
     type: Object,
     required: true,
     default: {}
+  },
+  isSearch: {
+    type: Boolean,
+    default: false
   }
 })
 </script>
@@ -16,16 +22,26 @@ const props = defineProps({
   <div class="movie">
     <img class="movie-img" :src="`https://image.tmdb.org/t/p/w300_and_h450_bestv2${movie.poster_path}`" :alt="movie.original_title">
     <div class="movie-description">
-      <div class="movie-name heading-3">
-        {{ movie.original_title }} ({{ movie.release_date }})
+      <div class="movie-head heading-3">
+        <div class="movie-name">
+          {{ movie.original_title }}
+        </div>
+        <div class="movie-release-date">
+          {{ movie.release_date }}
+        </div>
       </div>
       <span class="movie-overview">{{ movie.overview }}</span>
       <div class="movie-buttons">
-        <button class="btn movie-buttons-watched" @click="movieStore.toggleWatched(movie.id)">
-          <span v-if="!movie.isWatched">Watched</span>
-          <span v-else >Unwatched</span>
-        </button>
-        <button class="btn movie-buttons-delete" @click="movieStore.removeMovie(movie.id)">Delete</button>
+        <template v-if="!isSearch">
+          <button class="btn movie-buttons-watched" @click="movieStore.toggleWatched(movie.id)">
+            <span v-if="!movie.isWatched">Watched</span>
+            <span v-else>Unwatched</span>
+          </button>
+          <button class="btn movie-buttons-delete" @click="movieStore.removeMovie(movie.id)">Delete</button>
+        </template>
+        <template v-else>
+          <button class="btn btn_blue" @click="searchStore.addToUserMovies(movie)">Add</button>
+        </template>
       </div>
     </div>
   </div>
@@ -52,10 +68,11 @@ const props = defineProps({
     object-fit: cover;
   }
   &-name {
-    display: flex;
-    align-items: center;
     font-size: 20px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
+  }
+  &-release-date {
+    font-size: 14px;
   }
   &-overview {
     display: block;
